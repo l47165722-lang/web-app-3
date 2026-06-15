@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App1.css";
-import Header from "../MenuReView/Header";
+import Header from "../common/Header";
 import List from "./List";
 import CongestionChart from "./CongestionChart";
+import { API_BASE } from "../api";
 
 export default function App1() {
   const studentId = localStorage.getItem('studentId') || sessionStorage.getItem('studentId');
@@ -20,7 +21,7 @@ export default function App1() {
 
   useEffect(() => {
     const fetchZones = () => {
-      fetch("/api/zones")
+      fetch(`${API_BASE}/api/zones`)
         .then(res => res.json())
         .then(data => {
           setZones(data.map(zone => ({
@@ -41,7 +42,7 @@ export default function App1() {
   }, []);
 
   const onReport = (id, level) => {
-    fetch(`/api/zones/${id}/reports`, {
+    fetch(`${API_BASE}/api/zones/${id}/reports`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ level, studentId }),

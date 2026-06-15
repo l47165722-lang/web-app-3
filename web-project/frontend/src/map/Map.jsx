@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../MenuReView/NavActions.css';
+import '../common/NavActions.css';
 import './Map_style.css';
 import {
   cafeteriaLocations,
@@ -133,8 +133,8 @@ function Map() {
               <button type="button" onClick={() => navigate('/main')}>
                 메인
               </button>
-              <button type="button" onClick={() => navigate('/menu')}>
-                메뉴
+              <button type="button" onClick={() => navigate('/info')}>
+                식당 정보
               </button>
               <button type="button" onClick={() => navigate('/congestion')}>
                 혼잡도

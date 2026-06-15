@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../MenuReView/Header';
+import Header from '../common/Header';
 import './RestaurantInfo.css';
+import { API_BASE } from '../api';
 
 const RESTAURANTS = [
   {
@@ -66,7 +67,7 @@ export default function RestaurantInfo() {
   const [zones, setZones] = useState([]);
 
   useEffect(() => {
-    fetch('/api/zones')
+    fetch(`${API_BASE}/api/zones`)
       .then(r => r.json())
       .then(setZones)
       .catch(() => {});

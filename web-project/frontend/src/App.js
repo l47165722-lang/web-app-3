@@ -8,8 +8,6 @@ import Login from './login/Login';
 import SignUp from './login/SignUp';
 import MyPage from './myPage/myPage';
 import NotFound from './NotFound';
-import Header from './MenuReView/Header';
-import TopMenu from './MenuReView/TopMenu';
 import RestaurantInfo from './restaurantInfo/RestaurantInfo';
 
 function App() {
@@ -21,7 +19,6 @@ function App() {
       <Route path="/map" element={<Map />} />
       <Route path="/congestion" element={<App1 />} />
       <Route path="/congestion/:zoneId" element={<ZoneDetail />} />
-      <Route path="/menu" element={<><Header /><TopMenu /></>} />
       <Route path="/info" element={<RestaurantInfo />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/mypage" element={<MyPage />} />

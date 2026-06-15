@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
+import { API_BASE } from "../api";
 
 function Login() {
     const [studentId, setStudentId] = useState("");
@@ -16,7 +17,7 @@ function Login() {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch("/login", {
+            const response = await fetch(`${API_BASE}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ studentId, password })

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Header from '../MenuReView/Header';
+import Header from '../common/Header';
 import CongestionChart from './CongestionChart';
 import './ZoneDetail.css';
 import './App1.css';
+import { API_BASE } from '../api';
 
 const BUILDINGS = [
   { name: '공대식당',    prefix: '공대식당 ',    color: '#2563EB' },
@@ -76,7 +77,7 @@ export default function ZoneDetail() {
 
   useEffect(() => {
     const fetchZone = () => {
-      fetch(`/api/zones/${zoneId}/congestion`)
+      fetch(`${API_BASE}/api/zones/${zoneId}/congestion`)
         .then(r => r.json())
         .then(setZone)
         .catch(() => {});
@@ -98,7 +99,7 @@ export default function ZoneDetail() {
     if (isClosed) return;
     setJustVoted(lvl);
     setTimeout(() => setJustVoted(null), 2000);
-    fetch(`/api/zones/${zoneId}/reports`, {
+    fetch(`${API_BASE}/api/zones/${zoneId}/reports`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ level: lvl, studentId }),

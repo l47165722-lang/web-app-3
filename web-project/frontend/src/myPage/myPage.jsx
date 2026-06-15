@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './myPage_style.css';
+import { API_BASE } from '../api';
 
 const LEVEL_COLOR = { LOW: '#16A34A', MEDIUM: '#D97706', HIGH: '#DC2626' };
 const LEVEL_BG    = { LOW: '#F0FDF4', MEDIUM: '#FFFBEB', HIGH: '#FEF2F2' };
@@ -19,7 +20,7 @@ export default function MyPage() {
 
   useEffect(() => {
     if (!studentId) return;
-    fetch(`/api/zones/history?studentId=${encodeURIComponent(studentId)}`)
+    fetch(`${API_BASE}/api/zones/history?studentId=${encodeURIComponent(studentId)}`)
       .then(res => res.json())
       .then(data => { setHistory(data); setHistLoading(false); })
       .catch(() => setHistLoading(false));
@@ -41,7 +42,7 @@ export default function MyPage() {
   const handleDeleteUser = async () => {
     if (!window.confirm('정말 탈퇴하시겠습니까?\n모든 데이터가 영구적으로 삭제됩니다.')) return;
     try {
-      const res = await fetch('/deleteUser', {
+      const res = await fetch(`${API_BASE}/deleteUser`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ studentId }),

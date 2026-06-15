@@ -4,6 +4,7 @@ import {
   Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import './CongestionChart.css';
+import { API_BASE } from '../api';
 
 const COLORS = { low: '#16A34A', medium: '#F59E0B', high: '#EF4444' };
 
@@ -24,20 +25,19 @@ function CustomTooltip({ active, payload, label }) {
 export default function CongestionChart({ zoneId = null, title = '오늘의 시간대별 제보 현황' }) {
   const [data, setData] = useState([]);
 
-  const load = () => {
-    const url = zoneId ? `/api/zones/${zoneId}/stats/today` : '/api/zones/stats/today';
-    fetch(url)
-      .then(r => r.json())
-      .then(d => setData(d.map(item => ({
-        hour: `${item.hour}시`,
-        여유: item.low,
-        보통: item.medium,
-        혼잡: item.high,
-      }))))
-      .catch(() => {});
-  };
-
   useEffect(() => {
+    const load = () => {
+      const url = zoneId ? `${API_BASE}/api/zones/${zoneId}/stats/today` : `${API_BASE}/api/zones/stats/today`;
+      fetch(url)
+        .then(r => r.json())
+        .then(d => setData(d.map(item => ({
+          hour: `${item.hour}시`,
+          여유: item.low,
+          보통: item.medium,
+          혼잡: item.high,
+        }))))
+        .catch(() => {});
+    };
     load();
     const id = setInterval(load, 60000);
     return () => clearInterval(id);
