@@ -13,22 +13,19 @@ const BUILDINGS = [
   { name: '아람관',      prefix: '아람관 ',       color: '#D97706' },
 ];
 
+// 임시: 항상 제보 가능하도록 운영시간 체크 비활성화
+// 되돌리려면 아래 BUILDING_HOURS 주석을 풀고 isBuildingClosed 원래 로직을 복원
+/*
 const BUILDING_HOURS = {
   '공대식당':    { weekday: [10*60, 19*60+30], saturday: [11*60, 15*60], sunday: null },
   '구 바우어관': { weekday: [9*60,  19*60],    saturday: null,           sunday: null },
   '신 바우어관': { weekday: [9*60,  19*60],    saturday: null,           sunday: null },
   '아람관':      { weekday: [7*60+30, 19*60],  saturday: null,           sunday: null },
 };
+*/
 
 const isBuildingClosed = (buildingName) => {
-  const hours = BUILDING_HOURS[buildingName];
-  if (!hours) return false;
-  const now = new Date();
-  const day = now.getDay();
-  const curMin = now.getHours() * 60 + now.getMinutes();
-  const range = day === 0 ? hours.sunday : day === 6 ? hours.saturday : hours.weekday;
-  if (!range) return true;
-  return curMin < range[0] || curMin >= range[1];
+  return false;
 };
 
 const LEVEL_TO_PERCENT = { LOW: 22, MEDIUM: 58, HIGH: 94, UNKNOWN: 0 };
