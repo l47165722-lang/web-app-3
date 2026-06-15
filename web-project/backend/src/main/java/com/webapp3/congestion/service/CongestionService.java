@@ -86,20 +86,17 @@ public class CongestionService {
             return new double[]{1.0, 0.75};
         }
 
-        // 공대식당 점심 (11:45~13:15 혼잡, 이후 14:00까지 선형 감소)
-        if (zoneName.startsWith("공대식당")) {
-            int lunchStart = 11 * 60 + 45;
-            int lunchEnd   = 13 * 60 + 15;
-            int fadeEnd    = 14 * 60;
+        // 전 식당 점심 (11:45~13:15 혼잡, 이후 14:00까지 선형 감소)
+        int lunchStart = 11 * 60 + 45;
+        int lunchEnd   = 13 * 60 + 15;
+        int fadeEnd    = 14 * 60;
 
-            if (totalMin >= lunchStart && totalMin < lunchEnd) {
-                return new double[]{3.0, 0.70};
-            }
-            if (totalMin >= lunchEnd && totalMin < fadeEnd) {
-                // 혼잡(3.0)→여유(1.0), 비중 70%→0% 선형 감소
-                double t = (double)(totalMin - lunchEnd) / (fadeEnd - lunchEnd);
-                return new double[]{3.0 - 2.0 * t, 0.70 * (1 - t)};
-            }
+        if (totalMin >= lunchStart && totalMin < lunchEnd) {
+            return new double[]{3.0, 0.85};
+        }
+        if (totalMin >= lunchEnd && totalMin < fadeEnd) {
+            double t = (double)(totalMin - lunchEnd) / (fadeEnd - lunchEnd);
+            return new double[]{3.0 - 2.0 * t, 0.85 * (1 - t)};
         }
 
         return new double[]{0, 0};
