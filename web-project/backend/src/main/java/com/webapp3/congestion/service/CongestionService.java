@@ -25,6 +25,11 @@ public class CongestionService {
 
     private static final int VALID_MINUTES = 20;
 
+    // 시간 기준값(시간대 prior)을 "가상 제보 몇 건"으로 취급할지.
+    // 실제 제보 가중치 합이 이 값을 넘어서면 시간 기준보다 실제 제보가 우세해진다.
+    // 값이 작을수록 실제 제보가 더 빨리 반영됨.
+    private static final double PRIOR_STRENGTH = 2.0;
+
     private final ZoneRepository zoneRepository;
     private final CongestionReportRepository reportRepository;
 
@@ -58,13 +63,15 @@ public class CongestionService {
         double baseWeight = base[1]; // 시간 기준값 비중 (사용자 비중 = 1 - baseWeight)
 
         double finalScore;
-        if (userTotalWeight > 0 && baseWeight > 0) {
-            double userScore = userWeightedSum / userTotalWeight;
-            finalScore = userScore * (1 - baseWeight) + baseScore * baseWeight;
+        if (baseWeight > 0) {
+            // 시간 기준의 영향력은 제보가 쌓일수록 약해진다 (적응형 수축).
+            // 제보 0건이면 effectiveBaseWeight = baseWeight (시간 기준 그대로),
+            // 제보가 많아질수록 0에 수렴 → 실제 제보가 지배한다.
+            double effectiveBaseWeight = baseWeight * PRIOR_STRENGTH / (PRIOR_STRENGTH + userTotalWeight);
+            double userScore = userTotalWeight > 0 ? userWeightedSum / userTotalWeight : baseScore;
+            finalScore = userScore * (1 - effectiveBaseWeight) + baseScore * effectiveBaseWeight;
         } else if (userTotalWeight > 0) {
             finalScore = userWeightedSum / userTotalWeight;
-        } else if (baseScore > 0) {
-            finalScore = baseScore;
         } else {
             return ZoneCongestionResponse.of(zone.getId(), zone.getName(), CongestionLevel.UNKNOWN, 0, null);
         }
