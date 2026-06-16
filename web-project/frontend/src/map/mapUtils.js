@@ -27,7 +27,7 @@ export const NAVER_SCRIPT_URL = `https://oapi.map.naver.com/openapi/v3/maps.js?n
 export const API_ERROR_MESSAGE = '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
 
 const TMAP_KEY = 'NhPEBpY4iC2XVJJFxYttUaB27IAi9vwd216HB3nw';
-const TMAP_URL = 'https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&callback=function';
+const TMAP_URL = 'https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1';
 const ROUTE_STYLE = { strokeColor: '#3b82f6', strokeOpacity: 0.8, strokeWeight: 6 };
 
 // [필수] 좌표 변환
