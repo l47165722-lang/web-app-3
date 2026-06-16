@@ -3,7 +3,7 @@ import "./App1.css";
 import Header from "../common/Header";
 import List from "./List";
 import CongestionChart from "./CongestionChart";
-import { API_BASE } from "../api";
+import { API_BASE, submitReport } from "../api";
 
 export default function App1() {
   const studentId = localStorage.getItem('studentId') || sessionStorage.getItem('studentId');
@@ -42,13 +42,7 @@ export default function App1() {
   }, []);
 
   const onReport = (id, level) => {
-    fetch(`${API_BASE}/api/zones/${id}/reports`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ level, studentId }),
-    })
-      .then(() => showFeedback("제보가 완료되었습니다! 감사합니다."))
-      .catch(() => showFeedback("제보 전송에 실패했습니다. 다시 시도해주세요."));
+    submitReport(id, level, studentId).then(result => showFeedback(result.message));
   };
 
   const totalReports = zones.reduce((sum, z) => sum + z.reportCount, 0);

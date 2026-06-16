@@ -4,7 +4,7 @@ import Header from '../common/Header';
 import CongestionChart from './CongestionChart';
 import './ZoneDetail.css';
 import './App1.css';
-import { API_BASE } from '../api';
+import { API_BASE, submitReport } from '../api';
 
 const BUILDINGS = [
   { name: '공대식당',    prefix: '공대식당 ',    color: '#2563EB' },
@@ -96,13 +96,7 @@ export default function ZoneDetail() {
     if (isClosed) return;
     setJustVoted(lvl);
     setTimeout(() => setJustVoted(null), 2000);
-    fetch(`${API_BASE}/api/zones/${zoneId}/reports`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ level: lvl, studentId }),
-    })
-      .then(() => showFeedback('제보가 완료되었습니다! 감사합니다.'))
-      .catch(() => showFeedback('제보 전송에 실패했습니다.'));
+    submitReport(zoneId, lvl, studentId).then(result => showFeedback(result.message));
   };
 
   if (!zone) return (

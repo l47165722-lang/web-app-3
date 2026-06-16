@@ -4,6 +4,7 @@ import com.webapp3.congestion.domain.CongestionLevel;
 import com.webapp3.congestion.domain.CongestionReport;
 import com.webapp3.congestion.domain.Zone;
 import com.webapp3.congestion.dto.ZoneCongestionResponse;
+import com.webapp3.congestion.exception.DuplicateReportException;
 import com.webapp3.congestion.repository.CongestionReportRepository;
 import com.webapp3.congestion.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,9 @@ import java.util.TreeMap;
 public class CongestionService {
 
     private static final int VALID_MINUTES = 20;
+
+    // 같은 학생이 같은 식당을 재제보할 수 있게 되기까지의 쿨다운(분)
+    private static final int COOLDOWN_MINUTES = 5;
 
     // 시간 기준값(시간대 prior)을 "가상 제보 몇 건"으로 취급할지.
     // 실제 제보 가중치 합이 이 값을 넘어서면 시간 기준보다 실제 제보가 우세해진다.
@@ -121,6 +125,16 @@ public class CongestionService {
         }
         Zone zone = zoneRepository.findById(zoneId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구역입니다. zoneId=" + zoneId));
+
+        // 로그인 사용자(studentId 존재)는 같은 식당을 쿨다운 내에 재제보할 수 없다
+        if (studentId != null) {
+            LocalDateTime cooldownStart = LocalDateTime.now().minusMinutes(COOLDOWN_MINUTES);
+            if (reportRepository.existsByStudentIdAndZoneIdAndCreatedAtAfter(studentId, zoneId, cooldownStart)) {
+                throw new DuplicateReportException(
+                        "같은 식당은 " + COOLDOWN_MINUTES + "분에 한 번만 제보할 수 있어요.");
+            }
+        }
+
         reportRepository.save(new CongestionReport(zone, level, LocalDateTime.now(), studentId));
     }
 

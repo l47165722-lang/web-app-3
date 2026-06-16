@@ -12,6 +12,9 @@ public interface CongestionReportRepository extends JpaRepository<CongestionRepo
 
     List<CongestionReport> findByZoneIdAndCreatedAtAfter(Long zoneId, LocalDateTime cutoff);
 
+    // 쿨다운 체크: 해당 학생이 해당 식당에 cutoff 이후 제보한 적이 있는지
+    boolean existsByStudentIdAndZoneIdAndCreatedAtAfter(String studentId, Long zoneId, LocalDateTime cutoff);
+
     List<CongestionReport> findTop20ByStudentIdOrderByCreatedAtDesc(String studentId);
 
     @Query("SELECT r FROM CongestionReport r WHERE r.createdAt >= :startOfDay ORDER BY r.createdAt")
